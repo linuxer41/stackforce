@@ -40,7 +40,11 @@ const MyApp = ({
 				`}
 			</style>
 			<Head>
-				<title>Dokploy</title>
+				<title>SatckForge</title>
+				<meta name="description" content="StackForge: Plataforma de desarrollo y gestión de infraestructura moderna. Optimiza tus deployments, automatiza workflows y escala tus aplicaciones con herramientas profesionales diseñadas para desarrolladores." />
+				<meta name="keywords" content="stackforge,部署,开发工具,云计算,devops,infrastructure" />
+				<meta property="og:title" content="StackForge" />
+				<meta property="og:description" content="Plataforma de desarrollo y gestión de infraestructura moderna para equipos profesionales." />
 			</Head>
 			<ThemeProvider
 				attribute="class"
