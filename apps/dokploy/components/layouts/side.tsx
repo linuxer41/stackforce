@@ -406,7 +406,7 @@ const MENU: Menu = {
 		},
 		{
 			name: "Support",
-			url: "https://discord.gg/2tBnJ3jDJc",
+			url: "https://wa.me/59175434250",
 			icon: CircleHelp,
 		},
 	],
