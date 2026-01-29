@@ -17,7 +17,7 @@ const DEFAULT_TOKEN = "metrics";
 const Dashboard = () => {
 	const [toggleMonitoring, _setToggleMonitoring] = useLocalStorage(
 		"monitoring-enabled",
-		false,
+		true,
 	);
 
 	const { data: monitoring, isLoading } = api.user.getMetricsToken.useQuery();
