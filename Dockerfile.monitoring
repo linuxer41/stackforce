@@ -34,7 +34,7 @@ WORKDIR /app
 # Copiar archivos
 COPY --from=builder /app/apps/monitoring/main ./main
 COPY --from=builder /app/apps/monitoring/main.go ./monitor.go
-COPY --from=builder /app/apps/monitoring/.env ./.env
+
 
 ENV PORT=3001
 EXPOSE 3001
