@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Build stage - Ubuntu 24.04 con Go
-FROM golang:1.23-noble AS builder
+FROM golang:1.26rc2-bookworm AS builder
 
 # Instalar dependencias necesarias para compilar con CGO y SQLite
 RUN apt-get update && apt-get install -y --no-install-recommends \
