@@ -1,43 +1,42 @@
 # syntax=docker/dockerfile:1
-# Build stage
-FROM golang:1.21-alpine3.19 AS builder
 
-# Instalar dependencias necesarias
-RUN apk add --no-cache gcc musl-dev sqlite-dev
+# Build stage - Ubuntu 24.04 con Go
+FROM golang:1.23-noble AS builder
 
-# Establecer el directorio de trabajo
+# Instalar dependencias necesarias para compilar con CGO y SQLite
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
-
-# Copiar todo el código fuente primero
 COPY . .
 
-# Movernos al directorio de la aplicación golang
 WORKDIR /app/apps/monitoring
-
-# Descargar dependencias
 RUN go mod download
+RUN CGO_ENABLED=1 GOOS=linux go build -o main main.go
 
-# Compilar la aplicación
-RUN CGO_ENABLED=0 GOOS=linux go build -o main main.go
+# Etapa final - Ubuntu 24.04
+FROM ubuntu:24.04
 
-# Etapa final
-FROM alpine:3.19
+# Evitar prompts interactivos
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Instalar SQLite y otras dependencias necesarias
-RUN apk add --no-cache sqlite-libs docker-cli
+# Instalar SQLite, Docker CLI y certificados SSL
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libsqlite3-0 \
+    docker.io \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copiar el binario compilado y el archivo monitor.go
+# Copiar archivos
 COPY --from=builder /app/apps/monitoring/main ./main
 COPY --from=builder /app/apps/monitoring/main.go ./monitor.go
+COPY --from=builder /app/apps/monitoring/.env ./.env
 
-# COPY --from=builder /app/apps/golang/.env ./.env
-COPY --from=builder /app/apps/monitoring/.env.example ./.env
-
-# Exponer el puerto
 ENV PORT=3001
 EXPOSE 3001
 
-# Ejecutar la aplicación
 CMD ["./main"]
